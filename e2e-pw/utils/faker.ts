@@ -31,3 +31,20 @@ export function generateProductName() {
 
     return products[Math.floor(Math.random() * products.length)];
 }
+
+export function generateName() {
+    const names = [
+        "John Doe",
+        "Jane Smith",
+        "Alice Johnson",
+        "Bob Brown",
+        "Charlie Davis",
+        "Diana Evans",
+        "Ethan Wilson",
+        "Fiona Martinez",
+        "George Garcia",
+        "Hannah Lee",
+    ];
+
+    return names[Math.floor(Math.random() * names.length)];
+}
