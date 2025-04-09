@@ -2,7 +2,8 @@ import { test, expect } from "../../../setup"
 import {
     generateName,
     generateCategory,
-    generateProductName
+    generateProductName,
+    generateAccountNumber
 } from '../../../utils/faker'
 
 
@@ -38,7 +39,8 @@ async function createCustomer(adminPage) {
     /**
      * Clicking on contacts
      */
-    await adminPage.locator('a').filter({ hasText: 'Contacts' }).click();
+    await adminPage.getByRole('main').locator('a').filter({ hasText: 'Contacts' }).click();
+    //await adminPage.locator('a').filter({ hasText: 'Contacts' }).click();
 
     /**
      * Waiting for contacts page to appear
@@ -62,37 +64,52 @@ async function createCustomer(adminPage) {
     await expect(adminPage.getByRole('heading', { name: 'Contact created' })).toBeVisible();
 
     /**
-     * Clicking on create
+     * Clicking on Bank Accounts
      */
     await adminPage.getByRole('tab', { name: 'Bank Accounts' }).click();
 
     /**
-    * Waiting for contacts page to appear
+    * Waiting for Manage Bank Accounts page to appear
     */
     await adminPage.waitForSelector('h1:has-text("Manage Bank Accounts")');
 
+    /**
+     * Clicking on New Bank Account
+     */
     await adminPage.getByRole('button', { name: 'New Bank Account' }).click();
 
-    await adminPage.getByRole('textbox', { name: 'Account Number*' }).fill('123456789');
+    /**
+     * Filling bank account details
+     */
+    await adminPage.getByRole('textbox', { name: 'Account Number*' }).fill(generateAccountNumber());
     await adminPage.getByRole('switch', { name: 'Can Send Money' }).click();
 
+    /**
+     * Creating new bank
+     */
     await adminPage.getByTitle('Create').click();
 
+    /**
+     * Filling bank details
+     */
     await adminPage.getByRole('textbox', { name: 'Name*' }).fill(customerName);
-    await adminPage.getByRole('button', { name: 'Create' }).nth(3).click();
 
+    /**
+     * Clicking create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).click();
 
+    /**
+     * Selecting Account holder name from the drop down 
+     */
+    await adminPage.locator('div:nth-child(4) > .fi-fo-field-wrp > div > .grid > .fi-input-wrp > .fi-input-wrp-input > div:nth-child(2) > .choices > .choices__inner').click();
+    await adminPage.locator('[id="choices--mountedTableActionsData0partner_id-item-choice-1"]').click();
 
-
-    await adminPage.locator('div').filter({ hasText: /^Select an option$/ }).click();
-    //await adminPage.locator('.choices__inner').first().click();
-    await adminPage.waitForSelector('input[name="search_terms"]');
-    await adminPage.locator('[data-id="1"]').nth(0).click();
-    //await adminPage.getByRole('option', { name: 'asd' }).click();
-
+    /**
+     * Clicking on create button
+     */
     await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
 
-    //await adminPage.getByRole('textbox', { name: 'Account Number*' }).fill('1');
 }
 
 async function createProduct(adminPage) {
