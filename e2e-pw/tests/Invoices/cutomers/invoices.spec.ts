@@ -98,6 +98,7 @@ async function createCustomer(adminPage) {
      * Clicking create button
      */
     await adminPage.getByRole('button', { name: 'Create' }).nth(3).click();
+    //await adminPage.getByRole('button', { name: 'Create' }).click();
 
     /**
      * Selecting Account holder name from the drop down 
@@ -347,6 +348,59 @@ async function createPayment(adminPage) {
      * Waiting for create payment page to appear
      */
     await adminPage.waitForSelector('h1:has-text("Create Payment")');
+
+
+    /**
+     * Customer Bank Account
+     */
+    await adminPage.locator('div:nth-child(3) > .fi-fo-field-wrp > div > .grid > .fi-input-wrp > .fi-input-wrp-input > div:nth-child(2) > .choices > .choices__inner').click();
+    await adminPage.locator('#choices--datapartner_id-item-choice-1').click();
+
+    /**
+     * Payment Method Section
+     */
+    await adminPage.locator('div').filter({ hasText: /^Select an option$/ }).first().click();
+    await adminPage.locator('[data-id="1"]').nth(0).click();
+
+    /**
+     * Payment Method
+     */
+    await adminPage.locator('div').filter({ hasText: /^Select an option$/ }).first().click();
+    await adminPage.locator('#choices--datapayment_method_line_id-item-choice-1').click();
+
+    /**
+     * Filling Amount
+     */
+    await adminPage.getByRole('spinbutton', { name: 'Amount*' }).fill('1000');
+
+
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create', exact: true }).click();
+
+
+
+    /**
+     * Waiting for success message
+     */
+    await expect(adminPage.locator('div').filter({ hasText: 'Payment created The payment' }).nth(3)).toBeVisible();
+
+    /**
+     * Storing the State of the payment
+     */
+    const statusText = await adminPage.locator('span').filter({ hasText: 'Draft' }).first().textContent();
+
+    /**
+     * Confirming the payment
+     */
+    await adminPage.getByRole('button', { name: 'Confirm' }).click();
+
+    /**
+     * Expecting the status to be Inprocess
+     */
+    await expect(statusText).toContain('In Process');
 }
 
 test.describe("Customers management", () => {
