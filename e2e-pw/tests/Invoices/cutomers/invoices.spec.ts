@@ -4,7 +4,12 @@ import {
     generateCategory,
     generateProductName,
     generateAccountNumber,
-    generateBankName
+    generateBankName,
+    generateIncoterms,
+    generateTerm,
+    generateTaxGroup,
+    generateTaxName,
+    generateAttribute,
 } from '../../../utils/faker'
 
 
@@ -115,6 +120,7 @@ async function createCustomer(adminPage) {
 }
 
 async function createProduct(adminPage) {
+
     /**
      * Redirecting to Products inside Invoices plugin.
      */
@@ -700,7 +706,7 @@ async function createVendorsPayment(adminPage) {
 async function createBankAccount(adminPage) {
 
     /**
-     * Redirecting to Coniguration inside Invoices plugin.
+     * Redirecting to Bank Account inside Invoices Configuration.
      */
     await adminPage.goto("/admin/invoices/configurations/bank-accounts");
     await adminPage.waitForSelector('a:has-text("Bank Accounts")');
@@ -709,7 +715,6 @@ async function createBankAccount(adminPage) {
      * New Bank Account button clicked
      */
     await adminPage.getByRole('button', { name: 'New Bank Account' }).click();
-    //await adminPage.getByRole('link', { name: 'New Bank Account' }).click();
 
     /**
      * Waiting for create payment page to appear
@@ -721,15 +726,220 @@ async function createBankAccount(adminPage) {
      */
     await adminPage.getByRole('textbox', { name: 'Account Number*' }).fill(generateAccountNumber());
 
-
+    /**
+     * Creating new bank
+     */
     await adminPage.getByTitle('Create').click();
-    await adminPage.getByRole('textbox', { name: 'Name*' }).click();
+    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generateBankName());
     await adminPage.getByRole('button', { name: 'Create' }).click();
 
+    /**
+     * Selecting Account holder name from the drop down 
+     */
+    await adminPage.locator('div:nth-child(3) > .fi-fo-field-wrp > div > .grid > .fi-input-wrp > .fi-input-wrp-input > div:nth-child(2) > .choices > .choices__inner').click();
+    await adminPage.locator('#choices--mountedActionsData0partner_id-item-choice-1').click();
 
-    await adminPage.locator('.choices__inner').click();
-    await adminPage.locator('.choices__list[role="listbox"] .choices__item--choice').first().click();
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
 
+    /**
+     * Waiting for success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Bank Account created' })).toBeVisible();
+}
+
+async function createIncoterms(adminPage) {
+
+    /**
+     * Redirecting to Incoterms inside Invoices Configuration.
+     */
+    await adminPage.goto("/admin/invoices/configurations/inco-terms");
+    await adminPage.waitForSelector('a:has-text("Incoterms")');
+
+    /**
+     * New Incoterms button clicked
+     */
+    await adminPage.getByRole('button', { name: 'New Incoterms' }).click();
+
+    /**
+     * Waiting for Create Incoterms modal to appear
+     */
+    await adminPage.waitForSelector('h2:has-text("Create Incoterms")');
+
+    /**
+     * Filling up the required fields
+     */
+    await adminPage.getByRole('textbox', { name: 'Code*' }).fill(generateIncoterms());
+    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generateIncoterms());
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Waiting for success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Incoterm created' })).toBeVisible();
+}
+
+async function createPaymentTerm(adminPage) {
+
+    /**
+     * Redirecting to Payment Terms inside Invoices Configuration.
+     */
+    await adminPage.goto("/admin/invoices/configurations/payment-terms");
+    await adminPage.waitForSelector('a:has-text("Payment Terms")');
+
+    /**
+     * New Payment Terms button clicked
+     */
+    await adminPage.getByRole('link', { name: 'New Payment Terms' }).click();
+
+    /**
+     * Waiting for Create Incoterms page to appear
+     */
+    await adminPage.waitForSelector('h1:has-text("Create Payment Terms")');
+
+    /**
+     * Filling up the required fields
+     */
+    await adminPage.getByRole('textbox', { name: 'Payment Term*' }).fill(generateTerm());
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Waiting for success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Payment term created' })).toBeVisible();
+}
+
+async function createTaxGroups(adminPage) {
+
+    /**
+    * Redirecting to Tax Groups inside Invoices Configuration.
+    */
+    await adminPage.goto("/admin/invoices/configurations/tax-groups");
+    await adminPage.waitForSelector('a:has-text("Tax Groups")');
+
+    /**
+     * New Tax Groups button clicked
+     */
+    await adminPage.getByRole('link', { name: 'New Tax Groups' }).click();
+
+    /**
+     * Waiting for Create Tax Groups page to appear
+     */
+    await adminPage.waitForSelector('h1:has-text("Create Tax Groups")');
+
+    /**
+     * Filling up the required fields
+     */
+    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generateTaxGroup());
+    await adminPage.locator('div').filter({ hasText: /^Select an option$/ }).first().click();
+    await adminPage.getByRole('option', { name: 'DummyCorp LLC' }).click();
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Waiting for success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Tax group created' })).toBeVisible();
+}
+
+async function createTaxes(adminPage) {
+
+    /**
+    * Redirecting to Taxs in Invoices Configuration.
+    */
+    await adminPage.goto("/admin/invoices/configurations/taxes");
+    await adminPage.waitForSelector('a:has-text("Taxes")');
+
+    /**
+     * New Tax button clicked
+     */
+    await adminPage.getByRole('link', { name: 'New Taxes' }).click();
+
+    /**
+     * Waiting for Create Taxes page to appear
+     */
+    await adminPage.waitForSelector('h1:has-text("Create Taxes")');
+
+    /**
+     * Filling up the required fields
+     */
+    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generateTaxName());
+    await adminPage.getByLabel('Tax Type*').selectOption('purchase');
+    await adminPage.getByLabel('Tax Computation*').selectOption('fixed');
+    await adminPage.getByRole('switch', { name: 'Status' }).click();
+    await adminPage.getByRole('spinbutton', { name: 'Amount*' }).fill('15');
+    await adminPage.getByLabel('Tax Group*').click();
+    await adminPage.getByLabel('Tax Group*').selectOption('1');
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Waiting for success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Tax created' })).toBeVisible();
+}
+
+async function createAttribute(adminPage) {
+
+    /**
+    * Redirecting to Product Attributes in Invoices Configuration.
+    */
+    await adminPage.goto("/admin/invoices/configurations/product-attributes");
+    await adminPage.waitForSelector('a:has-text("Attributes")');
+
+    /**
+     * New Attribute button clicked
+     */
+    await adminPage.getByRole('link', { name: 'New Attribute' }).click();
+
+    /**
+     * Waiting for Create Taxes page to appear
+     */
+    await adminPage.waitForSelector('h1:has-text("Create Attribute")');
+
+    /**
+     * Filling up the Attribute with their values
+     */
+    const { attribute, values } = generateAttribute();
+    await adminPage.locator('[id="data\\.name"]').fill(attribute);
+
+
+    await adminPage.locator('[id="data\\.options"]').getByRole('textbox', { name: 'Name*' }).fill(values[0]);
+    await adminPage.getByRole('spinbutton', { name: 'Extra Price*' }).fill('1000');
+
+    await adminPage.getByRole('button', { name: 'Add to options' }).click();
+    await adminPage.getByRole('textbox', { name: 'Name*' }).nth(2).fill(values[1]);
+    await adminPage.getByRole('spinbutton', { name: 'Extra Price*' }).nth(1).fill('2000');
+
+    await adminPage.getByRole('button', { name: 'Add to options' }).click();
+    await adminPage.getByRole('textbox', { name: 'Name*' }).nth(3).fill(values[2]);
+    await adminPage.getByRole('spinbutton', { name: 'Extra Price*' }).nth(2).fill('1300');
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Waiting for success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Attribute created' })).toBeVisible();
 }
 
 test.describe("Customers management", () => {
@@ -778,4 +988,25 @@ test.describe("Invoices configuration", () => {
     test("should create a new Bank Account", async ({ adminPage }) => {
         await createBankAccount(adminPage);
     });
+
+    test("should create a new incoterms", async ({ adminPage }) => {
+        await createIncoterms(adminPage);
+    });
+
+    test("should create a new payment term", async ({ adminPage }) => {
+        await createPaymentTerm(adminPage);
+    });
+
+    test("should create a new tax groups", async ({ adminPage }) => {
+        await createTaxGroups(adminPage);
+    });
+
+    test("should create a new taxs ", async ({ adminPage }) => {
+        await createTaxes(adminPage);
+    });
+
+    test("should create a new attribute", async ({ adminPage }) => {
+        await createAttribute(adminPage);
+    });
+
 });
