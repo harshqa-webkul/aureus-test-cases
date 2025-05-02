@@ -10,6 +10,7 @@ import {
     generateTaxGroup,
     generateTaxName,
     generateAttribute,
+    generateDescription
 } from '../../../utils/faker'
 
 
@@ -141,6 +142,9 @@ async function createProduct(adminPage) {
      * Filling up the required fields
      */
     await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generateProductName());
+
+    await adminPage.locator('[id="data\\.description"]').fill(generateDescription());
+    //await adminPage.getByRole('textbox', { name: 'Description' }).fill(generateDescription());
     await adminPage.getByRole('spinbutton', { name: 'Price*' }).fill('100');
 
     /**

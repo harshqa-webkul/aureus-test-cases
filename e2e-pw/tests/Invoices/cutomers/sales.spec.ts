@@ -4,7 +4,9 @@ import {
     generateAccountNumber,
     generateBankName,
     generateProductName,
-    generateCategory
+    generateCategory,
+    generateActivityPlans,
+    generateActivityTypes
 } from "../../../utils/faker";
 
 async function createQuotation(adminPage) {
@@ -323,7 +325,75 @@ async function createProduct(adminPage) {
     await expect(adminPage.getByRole('heading', { name: 'Variants generated' })).toBeVisible();
 }
 
-test.describe("Quotation Management", () => {
+async function activityPlans(adminPage) {
+
+    /**
+     * Redirecting to Activity Plans inside Sales plugin.
+     */
+    await adminPage.goto("/admin/sale/configurations/activity-plans");
+    await adminPage.getByRole('button', { name: 'New Activity Plan' }).click();
+
+    /**
+     * Waiting for Activity Plans edit page to appear
+     */
+    await adminPage.getByRole('heading', { name: 'Create Activity Plan' }).waitFor();
+
+    /**
+     * Filling up the required fields
+     */
+    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generateActivityPlans());
+    await adminPage.locator('.choices__inner').first().click();
+    await adminPage.waitForSelector('input[name="search_terms"]');
+    await adminPage.locator('[data-id="1"]').nth(0).click();
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Expecting the success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Activity plan created' })).toBeVisible();
+}
+
+async function activityTypes(adminPage) {
+
+    /**
+     * Redirecting to Activity Types inside Sales plugin.
+     */
+    await adminPage.goto("/admin/sale/configurations/activity-types");
+    await adminPage.getByRole('button', { name: 'New Activity Types' }).click();
+
+    /**
+     * Waiting for Activity Types edit page to appear
+     */
+    await adminPage.getByRole('heading', { name: 'Create Activity Type' }).waitFor();
+
+    /**
+     * Filling up the required fields
+     */
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+
+    await adminPage.locator('.choices__inner').first().click();
+    await adminPage.getByRole('option', { name: 'Default' }).click();
+
+    await adminPage.locator('.choices__inner').first().click();
+    await adminPage.waitForSelector('input[name="search_terms"]');
+    await adminPage.locator('[data-id="1"]').nth(0).click();
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Expecting the success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Activity plan created' })).toBeVisible();
+}
+
+test.describe("Orders Management", () => {
     test("should create a new quotation", async ({ adminPage }) => {
         await createQuotation(adminPage);
     });
@@ -340,3 +410,15 @@ test.describe("Quotation Management", () => {
         await createProduct(adminPage);
     });
 })
+
+test.describe("Configurations Management", () => {
+    test("should create a new activity plans", async ({ adminPage }) => {
+        await activityPlans(adminPage);
+    });
+
+    test("should create a new activity types", async ({ adminPage }) => {
+        await activityTypes(adminPage);
+    });
+
+
+});

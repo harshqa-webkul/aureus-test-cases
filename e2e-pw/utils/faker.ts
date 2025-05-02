@@ -1,3 +1,34 @@
+export function generateDescription(length = 255) {
+    const phrases = [
+        "This data is created solely for internal testing purposes. Not for production use.",
+        "Test entry generated for QA validation and system behavior checks.",
+        "Temporary data for testing workflows, not a real transaction or activity.",
+        "A perfect blend of style and power.",
+        "Sample record created to verify system functionality during testing.",
+        "Test data. Please ignore used for development and testing scenarios only.",
+        "Created for functional testing of module features. Not valid for business operations.",
+        "This is a dummy entry used in sandbox/testing environment for process validation.",
+        "Entry used in regression testing to verify expected system responses.",
+        "Automated test data generated as part of the test suite execution.",
+    ];
+
+    let description = "";
+
+    while (description.length < length) {
+        let phrase = phrases[Math.floor(Math.random() * phrases.length)];
+
+        if (description.length + phrase.length <= length) {
+            description += (description ? " " : "") + phrase;
+        } else {
+            description +=
+                " " + phrase.substring(0, length - description.length);
+            break;
+        }
+    }
+
+    return description.trim();
+}
+
 export function generateCategory() {
     const category = [
         "Fashion & Apparel",
@@ -193,3 +224,36 @@ export function generateAttribute() {
     };
 }
 
+export function generateActivityPlans() {
+    const activities = [
+        "Q1 Marketing Strategy",
+        "Q2 Product Development",
+        "Q3 Sales Strategy",
+        "Q4 Customer Retention",
+        "Annual Budget Planning",
+        "Quarterly Review Meeting",
+        "Monthly Team Building Activity",
+        "Weekly Sales Training",
+        "Daily Standup Meeting",
+        "Bi-Weekly Project Update"
+    ];
+
+    return activities[Math.floor(Math.random() * activities.length)];
+}
+
+export function generateActivityTypes() {
+    const activityTypes = [
+        "Meeting",
+        "Workshop",
+        "Training",
+        "Conference",
+        "Webinar",
+        "Team Building",
+        "Networking Event",
+        "Product Launch",
+        "Sales Pitch",
+        "Customer Feedback Session"
+    ];
+
+    return activityTypes[Math.floor(Math.random() * activityTypes.length)];
+}
