@@ -6,7 +6,8 @@ import {
     generateProductName,
     generateCategory,
     generateActivityPlans,
-    generateActivityTypes
+    generateActivityTypes,
+    generateDescription
 } from "../../../utils/faker";
 
 async function createQuotation(adminPage) {
@@ -357,13 +358,13 @@ async function activityPlans(adminPage) {
     await expect(adminPage.getByRole('heading', { name: 'Activity plan created' })).toBeVisible();
 }
 
-async function activityTypes(adminPage) {
+async function activityTypesNone(adminPage) {
 
     /**
      * Redirecting to Activity Types inside Sales plugin.
      */
-    await adminPage.goto("/admin/sale/configurations/activity-types");
-    await adminPage.getByRole('button', { name: 'New Activity Types' }).click();
+    await adminPage.goto("/admin/sale/configurations/settings/activity-types");
+    await adminPage.getByRole('link', { name: 'New Activity Type' }).click();
 
     /**
      * Waiting for Activity Types edit page to appear
@@ -371,16 +372,45 @@ async function activityTypes(adminPage) {
     await adminPage.getByRole('heading', { name: 'Create Activity Type' }).waitFor();
 
     /**
-     * Filling up the required fields
+     * Filling up the Name of Activity Types
      */
     await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
 
+    /**
+     * Selecting the Action Type as None
+     */
     await adminPage.locator('.choices__inner').first().click();
-    await adminPage.getByRole('option', { name: 'Default' }).click();
+    await adminPage.getByRole('option', { name: 'None' }).click();
 
-    await adminPage.locator('.choices__inner').first().click();
-    await adminPage.waitForSelector('input[name="search_terms"]');
-    await adminPage.locator('[data-id="1"]').nth(0).click();
+    /**
+     * Filling up the default note
+     */
+    await adminPage.locator('[id="data\\.default_note"]').fill(generateDescription());
+
+    /**
+     * Selecting the icon
+     */
+    await adminPage.getByText('No icon selected').click();
+    await adminPage.getByRole('option', { name: 'heroicon-c-adjustments-horizontal' }).click();
+
+    /**
+     * Selecting Chaining Type
+     */
+    await adminPage.getByText('Suggest Next ActivitySuggest').click();
+    await adminPage.getByRole('option', { name: 'Trigger Next Activity' }).click();
+    await adminPage.getByText('Select an option').nth(4).click();
+    await adminPage.getByRole('option', { name: 'To-Do' }).click();
+
+    /**
+     * Toggling the Status
+     */
+    await adminPage.getByRole('switch', { name: 'Status' }).click();
+
+    /**
+     * Filling the delay count
+     */
+    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
+    await adminPage.getByLabel('Delay Unit').selectOption('days');
 
     /**
      * Clicking on Create button
@@ -390,7 +420,275 @@ async function activityTypes(adminPage) {
     /**
      * Expecting the success message
      */
-    await expect(adminPage.getByRole('heading', { name: 'Activity plan created' })).toBeVisible();
+    await expect(adminPage.getByRole('heading', { name: 'Activity Type created' })).toBeVisible();
+}
+
+async function activityTypesUpload(adminPage) {
+
+    /**
+     * Redirecting to Activity Types inside Sales plugin.
+     */
+    await adminPage.goto("/admin/sale/configurations/settings/activity-types");
+    await adminPage.getByRole('link', { name: 'New Activity Type' }).click();
+
+    /**
+     * Waiting for Activity Types edit page to appear
+     */
+    await adminPage.getByRole('heading', { name: 'Create Activity Type' }).waitFor();
+
+    /**
+     * Filling up the Name of Activity Types
+     */
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+
+    /**
+     * Selecting the Action Type as Upload File
+     */
+    await adminPage.locator('.choices__inner').first().click();
+    await adminPage.getByRole('option', { name: 'Upload File' }).click();
+
+    /**
+     * Filling up the default note
+     */
+    await adminPage.locator('[id="data\\.default_note"]').fill(generateDescription());
+
+    /**
+     * Selecting the icon
+     */
+    await adminPage.getByText('No icon selected').click();
+    await adminPage.getByRole('option', { name: 'heroicon-c-arrow-down-tray' }).click();
+
+    /**
+     * Selecting Trigger Type
+     */
+    await adminPage.getByText('Select an option').nth(4).click();
+    await adminPage.getByRole('option', { name: 'Exception' }).click();
+
+    /**
+     * Toggling the Status
+     */
+    await adminPage.getByRole('switch', { name: 'Status' }).click();
+
+    /**
+     * Filling the delay count
+     */
+    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
+    await adminPage.getByLabel('Delay Unit').selectOption('days');
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Expecting the success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Activity Type created' })).toBeVisible();
+}
+
+async function activityTypesDefault(adminPage) {
+
+    /**
+     * Redirecting to Activity Types inside Sales plugin.
+     */
+    await adminPage.goto("/admin/sale/configurations/settings/activity-types");
+    await adminPage.getByRole('link', { name: 'New Activity Type' }).click();
+
+    /**
+     * Waiting for Activity Types edit page to appear
+     */
+    await adminPage.getByRole('heading', { name: 'Create Activity Type' }).waitFor();
+
+    /**
+     * Filling up the Name of Activity Types
+     */
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+
+    /**
+     * Selecting the Action Type as Default
+     */
+    await adminPage.locator('.choices__inner').first().click();
+    await adminPage.getByRole('option', { name: 'Default' }).click();
+
+    /**
+     * Filling up the default note
+     */
+    await adminPage.locator('[id="data\\.default_note"]').fill(generateDescription());
+
+    /**
+     * Selecting the icon
+     */
+    await adminPage.getByText('No icon selected').click();
+    await adminPage.getByRole('option', { name: 'heroicon-c-adjustments-horizontal' }).click();
+
+    /**
+     * Selecting Chaining Type
+     */
+    await adminPage.getByText('Suggest Next ActivitySuggest').click();
+    await adminPage.getByRole('option', { name: 'Suggest Next Activity' }).click();
+    await adminPage.getByRole('textbox', { name: 'Select an option' }).click();
+
+    /**
+     * Selecting options
+     */
+    await adminPage.getByRole('option', { name: 'To-Do' }).click();
+    await adminPage.getByRole('option', { name: 'Meeting' }).click();
+    await adminPage.getByRole('option', { name: 'Webinar' }).click();
+    await adminPage.getByRole('option', { name: 'Exception' }).click();
+    await adminPage.getByRole('option', { name: 'Product Launch' }).click();
+    await adminPage.getByRole('option', { name: 'Customer Feedback Session' }).click();
+    await adminPage.getByRole('option', { name: 'Team Building' }).click();
+
+    /**
+     * Toggling the Status
+     */
+    await adminPage.getByRole('switch', { name: 'Status' }).click();
+
+    /**
+     * Filling the delay count
+     */
+    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
+    await adminPage.getByLabel('Delay Unit').selectOption('days');
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Expecting the success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Activity Type created' })).toBeVisible();
+}
+
+async function activityTypesPhone(adminPage) {
+
+    /**
+     * Redirecting to Activity Types inside Sales plugin.
+     */
+    await adminPage.goto("/admin/sale/configurations/settings/activity-types");
+    await adminPage.getByRole('link', { name: 'New Activity Type' }).click();
+
+    /**
+     * Waiting for Activity Types edit page to appear
+     */
+    await adminPage.getByRole('heading', { name: 'Create Activity Type' }).waitFor();
+
+    /**
+     * Filling up the Name of Activity Types
+     */
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+
+    /**
+     * Selecting the Action Type as Phone Call
+     */
+    await adminPage.locator('.choices__inner').first().click();
+    await adminPage.getByRole('option', { name: 'Phone Call' }).click();
+
+    /**
+     * Filling up the default note
+     */
+    await adminPage.locator('[id="data\\.default_note"]').fill(generateDescription());
+
+    /**
+     * Selecting the icon
+     */
+    await adminPage.getByText('No icon selected').click();
+    await adminPage.getByRole('option', { name: 'heroicon-c-arrow-right-start-on-rectangle' }).click();
+
+    /**
+     * Selecting Chaining Type
+     */
+    await adminPage.getByText('Suggest Next ActivitySuggest').click();
+    await adminPage.getByRole('option', { name: 'Trigger Next Activity' }).click();
+    await adminPage.getByText('Select an option').nth(4).click();
+    await adminPage.getByRole('option', { name: 'To-Do' }).click();
+
+    /**
+     * Toggling the Status
+     */
+    await adminPage.getByRole('switch', { name: 'Status' }).click();
+
+    /**
+     * Filling the delay count
+     */
+    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
+    await adminPage.getByLabel('Delay Unit').selectOption('days');
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Expecting the success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Activity Type created' })).toBeVisible();
+}
+
+async function activityTypesMeeting(adminPage) {
+
+    /**
+     * Redirecting to Activity Types inside Sales plugin.
+     */
+    await adminPage.goto("/admin/sale/configurations/settings/activity-types");
+    await adminPage.getByRole('link', { name: 'New Activity Type' }).click();
+
+    /**
+     * Waiting for Activity Types edit page to appear
+     */
+    await adminPage.getByRole('heading', { name: 'Create Activity Type' }).waitFor();
+
+    /**
+     * Filling up the Name of Activity Types
+     */
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+
+    /**
+     * Selecting the Action Type as None
+     */
+    await adminPage.locator('.choices__inner').first().click();
+    await adminPage.getByRole('option', { name: 'None' }).click();
+
+    /**
+     * Filling up the default note
+     */
+    await adminPage.locator('[id="data\\.default_note"]').fill(generateDescription());
+
+    /**
+     * Selecting the icon
+     */
+    await adminPage.getByText('No icon selected').click();
+    await adminPage.getByRole('option', { name: 'heroicon-c-adjustments-horizontal' }).click();
+
+    /**
+     * Selecting Chaining Type
+     */
+    await adminPage.getByText('Suggest Next ActivitySuggest').click();
+    await adminPage.getByRole('option', { name: 'Trigger Next Activity' }).click();
+    await adminPage.getByText('Select an option').nth(4).click();
+    await adminPage.getByRole('option', { name: 'To-Do' }).click();
+
+    /**
+     * Toggling the Status
+     */
+    await adminPage.getByRole('switch', { name: 'Status' }).click();
+
+    /**
+     * Filling the delay count
+     */
+    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
+    await adminPage.getByLabel('Delay Unit').selectOption('days');
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create' }).nth(1).click();
+
+    /**
+     * Expecting the success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Activity Type created' })).toBeVisible();
 }
 
 test.describe("Orders Management", () => {
@@ -416,9 +714,25 @@ test.describe("Configurations Management", () => {
         await activityPlans(adminPage);
     });
 
-    test("should create a new activity types", async ({ adminPage }) => {
-        await activityTypes(adminPage);
-    });
+    test.describe("Activity Types Management", () => {
+        test("should create a new activity types as None", async ({ adminPage }) => {
+            await activityTypesNone(adminPage);
+        });
 
+        test("should create a new activity types as Upload File", async ({ adminPage }) => {
+            await activityTypesUpload(adminPage);
+        });
 
+        test("should create a new activity types as Default", async ({ adminPage }) => {
+            await activityTypesDefault(adminPage);
+        });
+
+        test("should create a new activity types as Phone Call", async ({ adminPage }) => {
+            await activityTypesPhone(adminPage);
+        });
+
+        test("should create a new activity types as Meeting", async ({ adminPage }) => {
+            await activityTypesMeeting(adminPage);
+        });
+    })
 });
