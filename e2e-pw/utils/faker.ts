@@ -257,3 +257,20 @@ export function generateActivityTypes() {
 
     return activityTypes[Math.floor(Math.random() * activityTypes.length)];
 }
+
+export function generatePackageTypes() {
+    const packageTypes = [
+        "Box",
+        "Envelope",
+        "Pallet",
+        "Crate",
+        "Drum",
+        "Bag",
+        "Carton",
+        "Roll",
+        "Tube",
+        "Shrink Wrap"
+    ];
+
+    return packageTypes[Math.floor(Math.random() * packageTypes.length)];
+}

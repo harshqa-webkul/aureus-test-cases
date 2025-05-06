@@ -7,7 +7,8 @@ import {
     generateCategory,
     generateActivityPlans,
     generateActivityTypes,
-    generateDescription
+    generateDescription,
+    generatePackageTypes
 } from "../../../utils/faker";
 
 async function createQuotation(adminPage) {
@@ -374,7 +375,9 @@ async function activityTypesNone(adminPage) {
     /**
      * Filling up the Name of Activity Types
      */
-    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+    const activityTypeName = generateActivityTypes();
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(activityTypeName);
+    await adminPage.getByRole('textbox', { name: 'Summary' }).fill(activityTypeName);
 
     /**
      * Selecting the Action Type as None
@@ -407,10 +410,11 @@ async function activityTypesNone(adminPage) {
     await adminPage.getByRole('switch', { name: 'Status' }).click();
 
     /**
-     * Filling the delay count
+     * Filling the delay Information
      */
-    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
-    await adminPage.getByLabel('Delay Unit').selectOption('days');
+    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('1');
+    await adminPage.getByLabel('Delay Unit').selectOption('weeks');
+    await adminPage.getByLabel('Delay Form*').selectOption('previous_activity');
 
     /**
      * Clicking on Create button
@@ -439,7 +443,9 @@ async function activityTypesUpload(adminPage) {
     /**
      * Filling up the Name of Activity Types
      */
-    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+    const activityTypeName = generateActivityTypes();
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(activityTypeName);
+    await adminPage.getByRole('textbox', { name: 'Summary' }).fill(activityTypeName);
 
     /**
      * Selecting the Action Type as Upload File
@@ -470,10 +476,11 @@ async function activityTypesUpload(adminPage) {
     await adminPage.getByRole('switch', { name: 'Status' }).click();
 
     /**
-     * Filling the delay count
+     * Filling the delay information
      */
     await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
-    await adminPage.getByLabel('Delay Unit').selectOption('days');
+    await adminPage.getByLabel('Delay Unit').selectOption('minutes');
+    await adminPage.getByLabel('Delay Form*').selectOption('current_date');
 
     /**
      * Clicking on Create button
@@ -502,7 +509,9 @@ async function activityTypesDefault(adminPage) {
     /**
      * Filling up the Name of Activity Types
      */
-    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+    const activityTypeName = generateActivityTypes();
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(activityTypeName);
+    await adminPage.getByRole('textbox', { name: 'Summary' }).fill(activityTypeName);
 
     /**
      * Selecting the Action Type as Default
@@ -532,12 +541,8 @@ async function activityTypesDefault(adminPage) {
      * Selecting options
      */
     await adminPage.getByRole('option', { name: 'To-Do' }).click();
-    await adminPage.getByRole('option', { name: 'Meeting' }).click();
-    await adminPage.getByRole('option', { name: 'Webinar' }).click();
     await adminPage.getByRole('option', { name: 'Exception' }).click();
-    await adminPage.getByRole('option', { name: 'Product Launch' }).click();
-    await adminPage.getByRole('option', { name: 'Customer Feedback Session' }).click();
-    await adminPage.getByRole('option', { name: 'Team Building' }).click();
+    await adminPage.getByText('Suggest', { exact: true }).click();
 
     /**
      * Toggling the Status
@@ -545,10 +550,11 @@ async function activityTypesDefault(adminPage) {
     await adminPage.getByRole('switch', { name: 'Status' }).click();
 
     /**
-     * Filling the delay count
+     * Filling the delay information
      */
     await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
     await adminPage.getByLabel('Delay Unit').selectOption('days');
+    await adminPage.getByLabel('Delay Form*').selectOption('previous_activity');
 
     /**
      * Clicking on Create button
@@ -577,7 +583,9 @@ async function activityTypesPhone(adminPage) {
     /**
      * Filling up the Name of Activity Types
      */
-    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+    const activityTypeName = generateActivityTypes();
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(activityTypeName);
+    await adminPage.getByRole('textbox', { name: 'Summary' }).fill(activityTypeName);
 
     /**
      * Selecting the Action Type as Phone Call
@@ -610,10 +618,11 @@ async function activityTypesPhone(adminPage) {
     await adminPage.getByRole('switch', { name: 'Status' }).click();
 
     /**
-     * Filling the delay count
+     * Filling the delay information
      */
-    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
-    await adminPage.getByLabel('Delay Unit').selectOption('days');
+    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('10');
+    await adminPage.getByLabel('Delay Unit').selectOption('minutes');
+    await adminPage.getByLabel('Delay Form*').selectOption('current_date');
 
     /**
      * Clicking on Create button
@@ -642,13 +651,15 @@ async function activityTypesMeeting(adminPage) {
     /**
      * Filling up the Name of Activity Types
      */
-    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(generateActivityTypes());
+    const activityTypeName = generateActivityTypes();
+    await adminPage.getByRole('textbox', { name: 'Activity Type*' }).fill(activityTypeName);
+    await adminPage.getByRole('textbox', { name: 'Summary' }).fill(activityTypeName);
 
     /**
-     * Selecting the Action Type as None
+     * Selecting the Action Type as Meeting
      */
     await adminPage.locator('.choices__inner').first().click();
-    await adminPage.getByRole('option', { name: 'None' }).click();
+    await adminPage.getByRole('option', { name: 'Meeting' }).click();
 
     /**
      * Filling up the default note
@@ -659,7 +670,7 @@ async function activityTypesMeeting(adminPage) {
      * Selecting the icon
      */
     await adminPage.getByText('No icon selected').click();
-    await adminPage.getByRole('option', { name: 'heroicon-c-adjustments-horizontal' }).click();
+    await adminPage.getByRole('option', { name: 'heroicon-c-arrow-trending-up' }).click();
 
     /**
      * Selecting Chaining Type
@@ -675,10 +686,11 @@ async function activityTypesMeeting(adminPage) {
     await adminPage.getByRole('switch', { name: 'Status' }).click();
 
     /**
-     * Filling the delay count
+     * Filling the delay information
      */
-    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('2');
-    await adminPage.getByLabel('Delay Unit').selectOption('days');
+    await adminPage.getByRole('spinbutton', { name: 'Delay Count' }).fill('30');
+    await adminPage.getByLabel('Delay Unit').selectOption('minutes');
+    await adminPage.getByLabel('Delay Form*').selectOption('previous_activity');
 
     /**
      * Clicking on Create button
@@ -689,6 +701,45 @@ async function activityTypesMeeting(adminPage) {
      * Expecting the success message
      */
     await expect(adminPage.getByRole('heading', { name: 'Activity Type created' })).toBeVisible();
+}
+
+async function createPackaging(adminPage) {
+
+    /**
+     * Redirecting to Products Packaging inside Sales config.
+     */
+    await adminPage.goto("/admin/sale/configurations/packagings");
+    await adminPage.getByRole('button', { name: 'New Packaging' }).click();
+
+    /**
+     * Waiting for packaging modal to appear
+     */
+    await adminPage.getByRole('heading', { name: 'Create packaging' }).waitFor();
+
+    /**
+     * Filling up the Name of Packaging
+     */
+    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generatePackageTypes());
+
+    await adminPage.getByText('Select an option').first().click();
+
+
+
+    // await page.getByText('Select an option').first().click();
+    await adminPage.getByRole('textbox', { name: 'Select an option' }).press('ArrowDown');
+    await adminPage.getByRole('textbox', { name: 'Select an option' }).press('ArrowDown');
+    // await page.getByRole('textbox', { name: 'Select an option' }).press('ArrowDown');
+    // await page.getByRole('textbox', { name: 'Select an option' }).press('Enter');
+    // await adminPage.getByRole('textbox', { name: 'Select an option' }).press('arrowdown');
+    // await adminPage.getByText('Start typing to search...').waitFor();
+    //await adminPage.getByRole('textbox', { name: 'Select an option' }).press('Enter');
+
+
+    /**
+     * Filling up the Quantity 
+     */
+    await adminPage.getByRole('spinbutton', { name: 'Qty*' }).fill(500);
+
 }
 
 test.describe("Orders Management", () => {
@@ -734,5 +785,9 @@ test.describe("Configurations Management", () => {
         test("should create a new activity types as Meeting", async ({ adminPage }) => {
             await activityTypesMeeting(adminPage);
         });
-    })
+    });
+
+    test("should create a new packaging", async ({ adminPage }) => {
+        await createPackaging(adminPage);
+    });
 });
