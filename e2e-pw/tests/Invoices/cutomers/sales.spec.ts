@@ -8,7 +8,8 @@ import {
     generateActivityPlans,
     generateActivityTypes,
     generateDescription,
-    generatePackageTypes
+    generatePackageTypes,
+    generateAttribute,
 } from "../../../utils/faker";
 
 async function createQuotation(adminPage) {
@@ -251,7 +252,8 @@ async function createProduct(adminPage) {
     /**
      * Filling up the required fields
      */
-    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generateProductName());
+    const productName = generateProductName();
+    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(productName);
     await adminPage.getByRole('spinbutton', { name: 'Price*' }).fill('100');
 
     /**
@@ -721,25 +723,74 @@ async function createPackaging(adminPage) {
      */
     await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generatePackageTypes());
 
+    /**
+     * Selecting the Product
+     */
     await adminPage.getByText('Select an option').first().click();
-
-
-
-    // await page.getByText('Select an option').first().click();
-    await adminPage.getByRole('textbox', { name: 'Select an option' }).press('ArrowDown');
-    await adminPage.getByRole('textbox', { name: 'Select an option' }).press('ArrowDown');
-    // await page.getByRole('textbox', { name: 'Select an option' }).press('ArrowDown');
-    // await page.getByRole('textbox', { name: 'Select an option' }).press('Enter');
-    // await adminPage.getByRole('textbox', { name: 'Select an option' }).press('arrowdown');
-    // await adminPage.getByText('Start typing to search...').waitFor();
-    //await adminPage.getByRole('textbox', { name: 'Select an option' }).press('Enter');
-
+    await adminPage.locator('#choices--mountedActionsData0product_id-item-choice-1').click();
 
     /**
      * Filling up the Quantity 
      */
-    await adminPage.getByRole('spinbutton', { name: 'Qty*' }).fill(500);
+    await adminPage.getByRole('spinbutton', { name: 'Qty*' }).fill('500');
 
+    /**
+     * Selecting the Company
+     */
+    await adminPage.getByText('Select an option').click();
+    await adminPage.locator('#choices--mountedActionsData0company_id-item-choice-1').click();
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create', exact: true }).click();
+}
+
+async function createAttribute(adminPage) {
+
+    /**
+    * Redirecting to Product Attributes in Sales Configuration.
+    */
+    await adminPage.goto("/admin/sale/configurations/product-attributes");
+    await adminPage.waitForSelector('a:has-text("Attributes")');
+
+    /**
+     * New Attribute button clicked
+     */
+    await adminPage.getByRole('link', { name: 'New Attribute' }).click();
+
+    /**
+     * Waiting for Create Taxes page to appear
+     */
+    await adminPage.waitForSelector('h1:has-text("Create Attribute")');
+
+    /**
+     * Filling up the Attribute with their values
+     */
+    const { attribute, values } = generateAttribute();
+    await adminPage.locator('[id="data\\.name"]').fill(attribute);
+
+
+    await adminPage.locator('[id="data\\.options"]').getByRole('textbox', { name: 'Name*' }).fill(values[0]);
+    await adminPage.getByRole('spinbutton', { name: 'Extra Price*' }).fill('1000');
+
+    await adminPage.getByRole('button', { name: 'Add to options' }).click();
+    await adminPage.getByRole('textbox', { name: 'Name*' }).nth(2).fill(values[1]);
+    await adminPage.getByRole('spinbutton', { name: 'Extra Price*' }).nth(1).fill('2000');
+
+    await adminPage.getByRole('button', { name: 'Add to options' }).click();
+    await adminPage.getByRole('textbox', { name: 'Name*' }).nth(3).fill(values[2]);
+    await adminPage.getByRole('spinbutton', { name: 'Extra Price*' }).nth(2).fill('1300');
+
+    /**
+     * Clicking on Create button
+     */
+    await adminPage.getByRole('button', { name: 'Create', exact: true }).click();
+
+    /**
+     * Waiting for success message
+     */
+    await expect(adminPage.getByRole('heading', { name: 'Attribute created' })).toBeVisible();
 }
 
 test.describe("Orders Management", () => {
@@ -789,5 +840,9 @@ test.describe("Configurations Management", () => {
 
     test("should create a new packaging", async ({ adminPage }) => {
         await createPackaging(adminPage);
+    });
+
+    test("should create a new attribute", async ({ adminPage }) => {
+        await createAttribute(adminPage);
     });
 });
