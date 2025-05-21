@@ -274,3 +274,20 @@ export function generatePackageTypes() {
 
     return packageTypes[Math.floor(Math.random() * packageTypes.length)];
 }
+
+export function generateVendorName() {
+    const vendorNames = [
+        "ABC Supplies",
+        "XYZ Distributors",
+        "Global Traders",
+        "Local Market",
+        "Quality Goods Co.",
+        "Fast Shipping Inc.",
+        "Reliable Vendors",
+        "Trusted Suppliers",
+        "Wholesale Warehouse",
+        "Direct Importers"
+    ];
+
+    return vendorNames[Math.floor(Math.random() * vendorNames.length)];
+}

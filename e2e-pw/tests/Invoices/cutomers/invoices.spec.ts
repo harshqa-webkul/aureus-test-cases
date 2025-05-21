@@ -424,9 +424,9 @@ async function createVendor(adminPage) {
     await adminPage.getByRole('link', { name: 'New Vendor' }).click();
 
     /**
-     * Waiting for Customer edit page to appear
+     * Waiting for Vendors edit page to appear
      */
-    await adminPage.waitForSelector('h1:has-text("Vendors")');
+    await adminPage.waitForSelector('h1:has-text("Create Vendor")');
 
     /**
      * Filling up the Vendor details
@@ -500,8 +500,8 @@ async function createVendor(adminPage) {
     /**
      * Clicking create button
      */
-    //await adminPage.getByRole('button', { name: 'Create' }).nth(3).click();
-    await adminPage.getByRole('button', { name: 'Create' }).click();
+    await adminPage.getByRole('button', { name: 'Create' }).nth(3).click();
+    //await adminPage.getByRole('button', { name: 'Create' }).click();
 
     /**
      * Selecting Account holder name from the drop down 
