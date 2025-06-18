@@ -75,6 +75,20 @@ export function generateName() {
         "Fiona Martinez",
         "George Garcia",
         "Hannah Lee",
+        "Isabella Rodriguez",
+        "Jack White",
+        "Kevin Taylor",
+        "Laura Anderson",
+        "Michael Thomas",
+        "Nina Clark",
+        "Oliver Lewis",
+        "Paula Walker",
+        "Quentin Hall",
+        "Rachel Young",
+        "Samuel King",
+        "Tina Wright",
+        "Ursula Scott",
+        "Victor Green",
     ];
 
     return names[Math.floor(Math.random() * names.length)];
@@ -115,10 +129,69 @@ export function generateAddress() {
         "7th Ct",
         "8th Pl",
     ];
+    const cities = [
+        "New York",
+        "Los Angeles",
+        "Chicago",
+        "Houston",
+        "Phoenix",
+        "Philadelphia",
+        "San Antonio",
+        "San Diego",
+        "Dallas",
+        "San Jose",
+    ];
+    const states = [
+        "NY",
+        "CA",
+        "IL",
+        "TX",
+        "AZ",
+        "PA",
+        "FL",
+        "OH",
+        "GA",
+        "NC",
+    ];
+    const countries = [
+
+        "Canada",
+        "UK",
+        "Australia",
+        "Germany",
+        "France",
+        "India",
+        "Japan",
+        "Brazil",
+        "South Africa",
+    ];
+    const zipCodes = [
+        "10001",
+        "90001",
+        "60601",
+        "77001",
+        "85001",
+        "19101",
+        "33101",
+        "44101",
+        "30301",
+        "28201",
+    ];
 
     const randomStreet = streets[Math.floor(Math.random() * streets.length)];
-    const randomNumber = Math.floor(Math.random() * 1000) + 1; // 1-1000
-    return `${randomNumber} ${randomStreet}`;
+    const randomNumber = Math.floor(Math.random() * 1000) + 1;
+    const randomCity = cities[Math.floor(Math.random() * cities.length)];
+    const randomState = states[Math.floor(Math.random() * states.length)];
+    const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+    const randomZip = zipCodes[Math.floor(Math.random() * zipCodes.length)];
+
+    return {
+        street: `${randomNumber} ${randomStreet}`,
+        city: randomCity,
+        state: randomState,
+        country: randomCountry,
+        zip: randomZip
+    };
 }
 
 export function generateBankName() {

@@ -1,4 +1,6 @@
 import { test, expect } from "../../../setup"
+import path from 'path';
+import { fileURLToPath } from 'url';
 import {
     generateName,
     generateCategory,
@@ -10,9 +12,13 @@ import {
     generateTaxGroup,
     generateTaxName,
     generateAttribute,
-    generateDescription
+    generateDescription,
+    generateAddress,
+    generateEmail,
+    generatePhoneNumber
 } from '../../../utils/faker'
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function createCustomer(adminPage) {
 
@@ -39,6 +45,27 @@ async function createCustomer(adminPage) {
     await adminPage.getByRole('textbox', { name: 'Name' }).fill(customerName);
 
     /**
+     * Uploading an image for the customer
+     */
+    const randomCustomerImg = Math.floor(Math.random() * 7) + 1;
+    const customerImagePath = path.resolve(__dirname, `../../../utils/images/avatar/avatar${randomCustomerImg}.png`);
+    await adminPage.locator('input[type="file"]').setInputFiles(customerImagePath);
+
+    /**
+     * Filling the address details
+     */
+    await adminPage.getByRole('textbox', { name: 'Street 1' }).fill(generateAddress().street)
+    await adminPage.getByRole('textbox', { name: 'City' }).fill(generateAddress().city);
+    await adminPage.getByRole('textbox', { name: 'ZIP' }).fill(generateAddress().zip);
+
+    /**
+     * Filling the conatct details
+     */
+    const emailName = customerName.replace(/\s/g, '-').toLowerCase();
+    await adminPage.getByRole('textbox', { name: 'Email' }).fill(`${emailName}@demo.com`);
+    await adminPage.getByRole('textbox', { name: 'Phone' }).fill(generatePhoneNumber());
+
+    /**
      * Clicking on create
      */
     await adminPage.locator('#key-bindings-1').click();
@@ -58,12 +85,39 @@ async function createCustomer(adminPage) {
      * Clicking on Add Contact
      */
     await adminPage.getByRole('button', { name: 'Add Contact' }).click();
-    await adminPage.getByRole('textbox', { name: 'Name' }).fill(customerName);
+    let contactName = generateName();
+    while (contactName === customerName) {
+        contactName = generateName();
+    }
+    await adminPage.getByRole('textbox', { name: 'Name' }).fill(contactName);
+
+    /**
+    * Uploading an image of the contact person
+    */
+    const randomContactImg = Math.floor(Math.random() * 7) + 1;
+    const contactImagePath = path.resolve(__dirname, `../../../utils/images/avatar/avatar${randomContactImg}.png`);
+    await adminPage.locator('input[type="file"]').setInputFiles(contactImagePath);
+
+    /**
+     * Filling the address details
+     */
+    await adminPage.getByRole('textbox', { name: 'Street 1' }).fill(generateAddress().street)
+    await adminPage.getByRole('textbox', { name: 'City' }).fill(generateAddress().city);
+    await adminPage.getByRole('textbox', { name: 'ZIP' }).fill(generateAddress().zip);
+
+    /**
+     * Filling the conatct details
+     */
+    const contactEmailName = contactName.replace(/\s/g, '-').toLowerCase();
+    await adminPage.getByRole('textbox', { name: 'Email' }).fill(`${contactEmailName}@demo.com`);
+    await adminPage.getByRole('textbox', { name: 'Phone' }).fill(generatePhoneNumber());
 
     /**
      * Clicking on create button
      */
+
     await adminPage.getByRole('button', { name: 'Create', exact: true }).nth(4).click();
+    //await adminPage.getByRole('button', { name: 'Create', exact: true }).nth(4).click();
 
     /**
      * Waiting for success message
@@ -99,13 +153,23 @@ async function createCustomer(adminPage) {
     /**
      * Filling bank details
      */
-    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(generateBankName());
+    const bankName = generateBankName();
+    await adminPage.getByRole('textbox', { name: 'Name*' }).fill(bankName);
+    const bankCode = bankName.replace(/[^A-Za-z]/g, '').toUpperCase();
+    await adminPage.getByRole('textbox', { name: 'Bank Identifier Code' }).fill(bankCode);
+    const bankEmailName = bankName.replace(/\s/g, '-').toLowerCase();
+    await adminPage.getByRole('textbox', { name: 'Email' }).fill(`${bankEmailName}@demo.com`);
+    await adminPage.getByRole('textbox', { name: 'Phone' }).fill(generatePhoneNumber());
+
+    await adminPage.getByRole('textbox', { name: 'Street 1' }).fill(generateAddress().street)
+    await adminPage.getByRole('textbox', { name: 'City' }).fill(generateAddress().city);
+    await adminPage.getByRole('textbox', { name: 'ZIP' }).fill(generateAddress().zip);
 
     /**
      * Clicking create button
      */
-    //await adminPage.getByRole('button', { name: 'Create' }).nth(3).click();
-    await adminPage.getByRole('button', { name: 'Create' }).click();
+    await adminPage.getByRole('button', { name: 'Create' }).nth(3).click();
+    //await adminPage.getByRole('button', { name: 'Create' }).click();
 
     /**
      * Selecting Account holder name from the drop down 
